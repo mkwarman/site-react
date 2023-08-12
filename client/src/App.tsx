@@ -4,6 +4,8 @@ import { Box, Container, createTheme, ThemeProvider, CssBaseline } from '@mui/ma
 import { TopBar } from './components/topBar';
 import { Home } from './pages/home/';
 import { Projects } from './pages/projects';
+import { Resume } from './pages/resume';
+import { About } from './pages/about';
 
 const theme = createTheme({
   palette: {
@@ -25,6 +27,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/projects" element={<Projects />} />
+            <Route path="/resume" element={<Resume />} />
+            <Route path="/about" element={<About />} />
           </Routes>
         </Box>
       </Container>
