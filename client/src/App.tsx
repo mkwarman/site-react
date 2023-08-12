@@ -21,8 +21,8 @@ function App() {
   <ThemeProvider theme={theme}>
     <CssBaseline />
     <BrowserRouter>
-      <TopBar />
       <Container maxWidth={false} disableGutters sx={{height: "100vh"}}>
+        <TopBar />
         <Box maxWidth={"md"} padding={3} margin={"auto"}>
           <Routes>
             <Route path="/" element={<Home />} />
