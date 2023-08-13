@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+  client:
+    image: mkwarman/site-react-client
+    hostname: client
+    ports:
+      - "8080:80"
+    restart: always
+
