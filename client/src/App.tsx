@@ -23,7 +23,7 @@ function App() {
     <BrowserRouter>
       <Container maxWidth={false} disableGutters sx={{height: "100vh"}}>
         <TopBar />
-        <Box maxWidth={"md"} padding={3} margin={"auto"}>
+        <Box padding={3} margin={"auto"}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/projects" element={<Projects />} />
