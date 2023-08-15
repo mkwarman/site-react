@@ -9,11 +9,11 @@ import {
   Container,
   Button,
   MenuItem,
-  Fade,
+  Fade
 } from '@mui/material/';
 import MenuIcon from '@mui/icons-material/Menu';
 import styled from '@emotion/styled';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Cursor } from "../cursor";
 
 const TYPE_DELAY_MS = 30;
@@ -71,14 +71,6 @@ export const TopBar = () => {
   const [availablePages, setAvailablePages] = useState(pages);
   const location = useLocation();
   const navigate = useNavigate();
-
-  const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
   
   const simulateTyping = useCallback(async (toType: string, replace = false) => {
     if (replace === true) {
@@ -94,16 +86,26 @@ export const TopBar = () => {
     }
   }, [typeOutput])
 
+  const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) =>
+    setAnchorElNav(event.currentTarget);
+
+  const handleCloseNavMenu = () => setAnchorElNav(null);
+  
+  const handleNavMenuClick = (location: string) => {
+    setAnchorElNav(null);
+    navigate(location);
+  }
+
   const getFullPath = useCallback((pageLocation: string) =>
     `${navPrefix}${pageLocation}`, [navPrefix]);
 
-  const handleCD = useCallback(async (page: IPage) => {
+  const handleChangePage = useCallback(async (page: IPage) => {
     setShowDirs(false);
     await simulateTyping(`cd ${getFullPath(page.location)}`);
     navigate(page.location);
   }, [simulateTyping, getFullPath, navigate]);
 
-  const handleHome = useCallback(async (currentPath: string) => {
+  const handleClickHome = useCallback(async (currentPath: string) => {
     if (currentPath === "/") return;
 
     await simulateTyping("cd ~");
@@ -133,7 +135,7 @@ export const TopBar = () => {
             variant="h6"
             noWrap
             component="a"
-            onClick={() => handleHome(location.pathname)}
+            onClick={() => handleClickHome(location.pathname)}
             sx={monoStyle}
           >
             mkwarman.com:~{workingDir}$ {typeOutput}<Cursor/>
@@ -169,7 +171,7 @@ export const TopBar = () => {
               }}
             >
               {availablePages.map((page) => (
-                <MenuItem key={page.properName} onClick={handleCloseNavMenu}>
+                <MenuItem key={page.properName} onClick={() => handleNavMenuClick(page.location)}>
                   <Typography textAlign="center">{page.properName}</Typography>
                 </MenuItem>
               ))}
@@ -202,7 +204,7 @@ export const TopBar = () => {
                   <HintButton
                     disableElevation
                     key={page.properName}
-                    onClick={() => handleCD(page)}
+                    onClick={() => handleChangePage(page)}
                   >
                     <Typography variant="h6" sx={monoStyle}>{`${navPrefix}${page.location}`}</Typography>
                   </HintButton>
