@@ -80,7 +80,7 @@ export const TopBar = () => {
     setAnchorElNav(null);
   };
   
-  const simulateTyping = async (toType: string, replace = false) => {
+  const simulateTyping = useCallback(async (toType: string, replace = false) => {
     if (replace === true) {
       setTypeOutput("");
     }
@@ -92,7 +92,7 @@ export const TopBar = () => {
       setTypeOutput(toType.substring(0, i));
       await wait(TYPE_DELAY_MS);
     }
-  }
+  }, [typeOutput])
 
   const getFullPath = useCallback((pageLocation: string) =>
     `${navPrefix}${pageLocation}`, [navPrefix]);
@@ -101,9 +101,7 @@ export const TopBar = () => {
     setShowDirs(false);
     await simulateTyping(`cd ${getFullPath(page.location)}`);
     navigate(page.location);
-
-    
-  }, [setTypeOutput, navPrefix]);
+  }, [simulateTyping, getFullPath, navigate]);
 
   const handleHome = useCallback(async (currentPath: string) => {
     if (currentPath === "/") return;
@@ -112,7 +110,7 @@ export const TopBar = () => {
     navigate('');
 
     setShowDirs(true);
-  }, [setTypeOutput])
+  }, [navigate, simulateTyping])
 
   useEffect(() => {
     setAvailablePages(pages.filter(p => p.location !== location.pathname));

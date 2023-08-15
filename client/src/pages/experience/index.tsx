@@ -1,4 +1,4 @@
-import { Box, Accordion, AccordionSummary, Typography, AccordionDetails, Divider, styled, useMediaQuery, useTheme, Grid } from "@mui/material"
+import { Box, Accordion, AccordionSummary, Typography, AccordionDetails, styled, useMediaQuery, useTheme } from "@mui/material"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { MONTHS, MONTHS_SHORT } from "../../constants";
 import { SyntheticEvent, useCallback, useState } from "react";
