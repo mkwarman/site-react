@@ -17,7 +17,7 @@ export const FilterDrawer = <T extends IFilterSections>(props: IFilterDrawerProp
     }
 
     props.onChange(update);
-  }, [props.filterSections])
+  }, [props])
 
   const { filterSections, width } = props;
   return (

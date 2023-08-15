@@ -1,5 +1,5 @@
 import { Box, Checkbox, Divider, FormControlLabel, FormGroup } from "@mui/material"
-import { IFilterOptionSelect, IFilterSectionSelect, IFilterSections } from "./types"
+import { IFilterOptionSelect, IFilterSectionSelect } from "./types"
 import { useCallback } from "react"
 
 interface ICheckboxSection {
@@ -24,7 +24,7 @@ export const CheckboxSection = (props: ICheckboxSection) => {
       }
     };
     props.onChange(update);
-  }, [props.section])
+  }, [props])
   
   return (
     <Box padding={1}>

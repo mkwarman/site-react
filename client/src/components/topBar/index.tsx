@@ -16,7 +16,7 @@ import styled from '@emotion/styled';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Cursor } from "../cursor";
 
-const TYPE_DELAY_MS = 40;
+const TYPE_DELAY_MS = 30;
 
 interface IPage {
    properName: string,
@@ -37,8 +37,8 @@ const pages: IPage[] = [
     location: "/resume/",
   },
   {
-    properName: "About",
-    location: "/about/",
+    properName: "Experience",
+    location: "/experience/",
   },
 ];
 

@@ -63,8 +63,6 @@ const getInitialFilterSections = (projects: IProject[]): IProjectFilters => {
     } as IFilterSectionSelect
   }
 
-  console.log(initialFilterSections);
-
   return initialFilterSections;
 }
 
@@ -74,7 +72,7 @@ const getInitialFilterSections = (projects: IProject[]): IProjectFilters => {
  * - Add skeleton
  */
 export const Projects = () => {
-  const [allProjects, setAllProjects] = useState(placeholderProjects);
+  const [allProjects] = useState(placeholderProjects);
   const [projects, setProjects] = useState<IProject[]>(allProjects);
   const [filters, setFilters] = useState(getInitialFilterSections(projects))
 
@@ -88,7 +86,7 @@ export const Projects = () => {
 
     setFilters(newFilters);
     setProjects(newProjects);
-  }, [setFilters, setProjects]);
+  }, [setFilters, setProjects, allProjects]);
 
   return (
     <Box sx={{ display: 'flex' }} maxWidth={"lg"} mx={"auto"}>
