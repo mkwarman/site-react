@@ -5,11 +5,15 @@ import {
 import { FilterDrawer } from "../../components/filterDrawer";
 import { useCallback, useState } from "react";
 import { IFilterSections, IFilterSection, FilterSectionTypeEnum, IFilterSectionSelect } from "../../components/filterDrawer/types";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
+// TODO: Consider an interface for some kind of IFilterable that would allow the filter sections to be constructed dynamically
+// Ideally something that would also allow ordering the sections and options by their commonality in the data
 interface IProject {
   name: string,
   description: string,
-  technologies: string[]
+  technologies: string[],
+  link?: string,
 }
 
 interface IProjectFilters extends IFilterSections {
@@ -18,39 +22,62 @@ interface IProjectFilters extends IFilterSections {
 
 const placeholderProjects: IProject[] = [
   {
-    name: "test project 1",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
-    technologies: ["lorem", "ipsum", "dolor", "sit", "amet", "consectetur"],
+    name: "Accrual Policies",
+    description: "I lead the design and development of the Accrual Policies feature suite at Zeal. The project involved automatically calculating accrued time based on worked hours for various policies according to their definition. For example, a customer can create a policy indicating that for every 80 hours worked, an employee should earn 8 hours of PTO. Rich policy customization supports defining initial balances, waiting periods, yearly caps, accrual caps, and more. I built this project using Typescript, Node, Express, and MongoDB. The project directly contributed to new customer relationships at Zeal.",
+    technologies: ["TypeScript", "Node", "MongoDB", "Express", "Software Architecture"],
+    link: "https://docs.zeal.com/docs/pto-and-sick-leave-accruals",
   },
   {
-    name: "test project 2",
-    description: "Lacinia at quis risus sed. Amet consectetur adipiscing elit pellentesque. Magna fringilla urna porttitor rhoncus dolor purus. Massa id neque aliquam vestibulum morbi blandit cursus risus. Eget nullam non nisi est sit amet facilisis. Scelerisque eu ultrices vitae auctor eu augue ut lectus arcu. Nibh venenatis cras sed felis eget velit aliquet sagittis. Turpis in eu mi bibendum neque egestas congue quisque. Elementum nisi quis eleifend quam adipiscing. Integer vitae justo eget magna. Aliquet lectus proin nibh nisl condimentum id venenatis a condimentum. In ornare quam viverra orci sagittis eu volutpat odio. Purus gravida quis blandit turpis cursus.",
-    technologies: ["lorem", "Lacinia", "dolor", "sit", "amet", "consectetur"],
+    name: "Recurring Shifts",
+    description: "I lead the design and development of the Recurring Shifts initiative for Paylocity's scheduler application to provide users a quick and easy way of creating shifts for their employees according to a set pattern. I started by working with product and UX teams to determine desired outcomes, presented technical considerations and identified possible side effects for discussion, and then documented planned architecture from database through frontend. Then, I presented my plans to the full development team to solicit feedback and iterate on the planned architecture. Next, I began the development of the initiative and continue to provide assistance to other developers as needed to ensure everyone is on the same page.",
+    technologies: ["React", "C#", "SQL", "Software Architecture"],
   },
   {
-    name: "test project 3",
-    description: "Tristique risus nec feugiat in fermentum posuere urna nec. Id neque aliquam vestibulum morbi blandit. Egestas purus viverra accumsan in nisl. Malesuada pellentesque elit eget gravida cum sociis natoque penatibus et. Consequat semper viverra nam libero justo. Molestie at elementum eu facilisis sed odio morbi. Duis convallis convallis tellus id interdum velit laoreet id donec. Malesuada fames ac turpis egestas maecenas. Donec ultrices tincidunt arcu non sodales neque. Augue lacus viverra vitae congue eu consequat. Enim lobortis scelerisque fermentum dui faucibus in ornare quam viverra. Duis ultricies lacus sed turpis tincidunt id aliquet. Aliquet risus feugiat in ante metus dictum at tempor commodo. Elementum facilisis leo vel fringilla est ullamcorper eget nulla. Pellentesque elit eget gravida cum sociis natoque penatibus et magnis. Neque vitae tempus quam pellentesque nec. Nibh tortor id aliquet lectus proin nibh.",
-    technologies: ["lorem", "Lacinia", "fermentum", "sit", "amet", "consectetur"],
+    name: "Default Schedules",
+    description: "I lead the design and development of the Default Schedule initiative for Paylocity's scheduling application to replace a previous legacy implementation. I started by working with product and UX teams to determine desired outcomes, align scope, and then document planned architecture from database through frontend. Then, I presented my plans to the full development team to solicit feedback and iterate on the planned architecture. Next, I lead the development of the initiative and provided assistance to other developers as needed to ensure everyone was on the same page, handling necessary changes as they come up in an Agile fashion. At approximately 90% MVP completion, I worked with dedicated QAE testers to host testing \"dojos\", to pressure test new features and their interactions with existing flows.",
+    technologies: ["React", "C#", "SQL", "Software Architecture"],
   },
   {
-    name: "test project 4",
-    description: "Arcu dictum varius duis at consectetur lorem donec. Enim nec dui nunc mattis enim ut tellus elementum sagittis. Urna duis convallis convallis tellus id interdum velit laoreet. Tellus orci ac auctor augue. Nunc id cursus metus aliquam eleifend mi. A scelerisque purus semper eget duis at tellus at urna. Est ante in nibh mauris cursus mattis molestie a. Arcu dui vivamus arcu felis bibendum ut tristique. Pellentesque adipiscing commodo elit at imperdiet dui accumsan sit. Varius quam quisque id diam vel quam elementum pulvinar. Et netus et malesuada fames. Magna etiam tempor orci eu lobortis elementum nibh. Porttitor eget dolor morbi non. Netus et malesuada fames ac turpis. Risus pretium quam vulputate dignissim suspendisse in est ante. Consequat ac felis donec et odio pellentesque diam volutpat. Senectus et netus et malesuada fames. Laoreet suspendisse interdum consectetur libero id faucibus nisl tincidunt. Pharetra sit amet aliquam id diam maecenas ultricies mi eget. Adipiscing enim eu turpis egestas pretium aenean.",
-    technologies: ["lorem", "ipsum", "dolor", "sit", "amet", "consectetur"],
+    name: "\"Paper Cuts\" Stability & Scalability Tiger Team",
+    description: `In preparation for the busiest time of year for Paylocity, my category decided to form a volunteer tiger team to focus solely on addressing a number of performance issues across our application. I volunteered for this team and achieved some notable results:
+* Optimized a query used for every API request in our app to be 43 times more CPU efficient and reduce logical reads by 98%.
+* Created a wiki page and hosted a knowledge transfer session on how I did it.
+* Rewrote a stored procedure used millions of times per second during peak punch hours to be about 3 times more CPU efficient and reduce logical reads by 93%.
+* Removed multiple redundant executions of queries for session data called for every API request in our app Flattened nested loops and database calls to eliminate inefficient execution and mitigate connection pool contention.
+* Replaced entity framework queries with SQL in many locations where entity framework generated inefficient queries
+    `,
+    technologies: ["C#", "SQL"],
   },
   {
-    name: "test project 5",
-    description: "Arcu dictum varius duis at consectetur lorem donec massa sapien. Sed turpis tincidunt id aliquet risus feugiat in ante. Tellus mauris a diam maecenas sed enim. Donec ac odio tempor orci. Velit scelerisque in dictum non consectetur a erat. Lorem ipsum dolor sit amet consectetur. Maecenas pharetra convallis posuere morbi leo urna molestie at. Tempor orci dapibus ultrices in iaculis nunc sed. Sem integer vitae justo eget. Sed tempus urna et pharetra pharetra massa massa ultricies mi. Viverra vitae congue eu consequat ac felis donec et. Neque egestas congue quisque egestas diam in arcu.",
-    technologies: ["lorem", "Lacinia", "dolor", "sit", "donec", "consectetur"],
+    name: "Comparison of Active and Passive Attention Based Tasks Using EEG Waves with Convolutional Neural Network",
+    description: "For my capstone project at KSU, I built a TensorFlow 3D convolutional neural network for comparing passive verses active task brain activity of 24-sensor electroencephalogram (EEG) wave data collected from subjects when they were tired verses well rested. I first trained the neural network using data collected during known activity and energy states, and then tested the neural network's ability to guess whether subjects were performing active or passive tests when tired verses well rested from test data. I also ran the tests using different prefilter options and programmatic pre-transformations such as 5-band Fourier (mapping to the 5 brain wave bands), and Wigner-Ville distribution. The results of the tests indicated that the neural network was noticeably better at classifying energy state between passive tasks verses active tasks.",
+    technologies: ["Python", "TensorFlow", "Machine Learning"],
+    link: "https://github.com/mkwarman/Active-Passive-Attention-3DCNN-Classification",
   },
   {
-    name: "test project 6",
-    description: "Imperdiet dui accumsan sit amet nulla facilisi morbi tempus iaculis. Quis viverra nibh cras pulvinar mattis. Sed tempus urna et pharetra pharetra massa. Accumsan in nisl nisi scelerisque eu ultrices vitae auctor eu. Blandit volutpat maecenas volutpat blandit aliquam. Proin nibh nisl condimentum id venenatis a condimentum. Sed euismod nisi porta lorem. Ultrices gravida dictum fusce ut placerat orci. Enim blandit volutpat maecenas volutpat blandit aliquam etiam. Habitasse platea dictumst quisque sagittis purus sit. Arcu ac tortor dignissim convallis aenean et tortor at. Nisl nisi scelerisque eu ultrices vitae auctor eu augue ut. Orci nulla pellentesque dignissim enim sit amet. Vitae sapien pellentesque habitant morbi tristique senectus et netus.",
-    technologies: ["lorem", "ipsum", "dolor", "fermentum", "amet", "consectetur"],
-  }
+    name: "Repair of Legacy Recurring Template Generation",
+    description: "Paylocity's legacy template generation process that was used to automatically great shifts for employees according to a set pattern was encountering errors resulting in missed generation and server resource contention. I volunteered to reverse engineer the legacy code and fix the problems to ensure the best experience for our customers. My final strategy to address the issues was two fold; first, I rewrote to automated execution flow to trigger via a queued job and to automatically back-date generation should the queue processor ever be heavily delayed. Second, I redesigned the generation flow to be limited to configurable maximums (rather than let users attempt to generate shifts 100 years into the future), and to limit recurring automated generation to one week at a time, one year in advance. The solution has been stable ever since.",
+    technologies: ["Angular.js", "C#", "SQL"],
+  },
+  {
+    name: "Alibaba PayLater With Kabbage",
+    description: "Helped build a full-stack solution to integrate Kabbage into Alibaba's checkout problems to ensure the best experience for our customers. My final strategy to address the issues was two fold; first, I rewrote to automated execution flow to trigger via a queued job and to automatically back-date generation should the queue processor ever be heavily delayed. Second, I redesigned the generation flow to be limited to configurable maximums (rather than let users attempt to generate shifts 100 years into the future), and to limit recurring automated generation to one week at a time, one year in advance. The solution has been stable ever since.",
+    technologies: ["React", "C#", "SQL"],
+  },
+  {
+    name: "Kabbage Card",
+    description: "Helped build and support the rollout of the Kabbage Card, which allows customers to use their Kabbage line of credit on POS transactions. Implementation involved the construction of new microservices, updates to legacy platform code, database design changes, and front-end application improvements.",
+    technologies: ["React", "C#", "SQL"],
+  },
+  {
+    name: "Construction, Maintenance, and Improvement of The Home Depot Payments Gateway",
+    description: "Used a variety of technologies including React, Angular2, and Redux to develop and improve the primary payment gateway for Home Depot services. This gateway served as an efficient and stable way to take payments of multiple types while maintaining high security and familiar experience for Home Depot's customers. Work on this project ranged from back-end services for processing payments and running settlement tasks to front-end, customer facing UI development with assistance from UX developers. Given the environment of this project, performance and security were of the utmost importance.",
+    technologies: ["React", "Angular"],
+  },
 ]
 
 const getInitialFilterSections = (projects: IProject[]): IProjectFilters => {
-  const distinctTechnologies = Array.from(new Set(projects.flatMap(p => p.technologies)));
+  const distinctTechnologies = Array.from(new Set(projects.flatMap(p => p.technologies))).sort();
   const options = Object.fromEntries(distinctTechnologies.map(tech => [tech,
     {label: tech, key: tech, isChecked: false} 
   ]));
@@ -103,12 +130,14 @@ export const Projects = () => {
                 <Typography variant="h5">{project.name}</Typography>
                 <Typography variant="subtitle2" noWrap>{project.technologies.join(", ")}</Typography>
                 <Typography paragraph sx={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  display: "-webkit-box",
-                  WebkitLineClamp: "2",
-                  WebkitBoxOrient: "vertical",
-                }}>{project.description}</Typography>
+                  // overflow: "hidden",
+                  // textOverflow: "ellipsis",
+                  // display: "-webkit-box",
+                  // WebkitLineClamp: "2",
+                  // WebkitBoxOrient: "vertical",
+                }}>
+                  <ReactMarkdown>{project.description}</ReactMarkdown>
+                </Typography>
               </CardContent>
             </Card>
           </Grid>
