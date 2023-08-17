@@ -1,4 +1,10 @@
-import { Box, Checkbox, Divider, FormControlLabel, FormGroup } from "@mui/material"
+import {
+  Box,
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  FormGroup
+} from "@mui/material"
 import { IFilterOptionSelect, IFilterSectionSelect } from "./types"
 import { useCallback } from "react"
 

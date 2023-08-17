@@ -1,4 +1,9 @@
-import { useState, MouseEvent, useCallback, useEffect } from 'react';
+import {
+  useState,
+  MouseEvent,
+  useCallback,
+  useEffect
+} from 'react';
 import {
   AppBar,
   Box,
@@ -9,14 +14,18 @@ import {
   Container,
   Button,
   MenuItem,
-  Fade
+  Fade,
+  useTheme,
 } from '@mui/material/';
 import MenuIcon from '@mui/icons-material/Menu';
 import styled from '@emotion/styled';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Cursor } from "../cursor";
+import DarkModeOutlined from "@mui/icons-material/DarkModeOutlined";
+import LightModeOutlined from "@mui/icons-material/LightModeOutlined";
 
 const TYPE_DELAY_MS = 30;
+const TEXT_COLOR = "#EEEEEE";
 
 interface IPage {
    properName: string,
@@ -47,12 +56,11 @@ const monoStyle = {
   display: { xs: 'none', md: 'flex' },
   fontFamily: 'monospace',
   fontWeight: 700,
-  color: 'inherit',
+  color: TEXT_COLOR,
   textDecoration: 'none',
 }
 const HintButton = styled(Button)({
   textTransform: "none",
-  color: '#EEEEEE',
   '&:hover': {
     color: '#FFFF00'
   },
@@ -61,8 +69,12 @@ const HintButton = styled(Button)({
 const wait = async (delayMS: number) => new Promise(resolve => setTimeout(resolve, delayMS));
 const isHome = (pathName: string) => pathName === "/";
 
+interface ITopBarProps {
+  changeThemeMode: (prevMode: 'light' | 'dark') => void;
+}
+
 // When on a child page, have "../" already typed out. It works to go 'home' and to other dirs
-export const TopBar = () => {
+export const TopBar = ({changeThemeMode}: ITopBarProps) => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [showDirs, setShowDirs] = useState(true);
   const [typeOutput, setTypeOutput] = useState("");
@@ -71,6 +83,7 @@ export const TopBar = () => {
   const [availablePages, setAvailablePages] = useState(pages);
   const location = useLocation();
   const navigate = useNavigate();
+  const theme = useTheme();
   
   const simulateTyping = useCallback(async (toType: string, replace = false) => {
     if (replace === true) {
@@ -177,7 +190,7 @@ export const TopBar = () => {
               ))}
             </Menu>
           </Box>
-          <Box sx={{flexGrow: 1, display: { xs: 'flex', md: 'none' }, mr: "48px" }}>
+          <Box sx={{flexGrow: 1, display: { xs: 'flex', md: 'none' }}}>
             <Typography
               variant="h5"
               noWrap
@@ -211,6 +224,17 @@ export const TopBar = () => {
                 ))}
                 </Box>
               </Fade>
+          </Box>
+          <Box>
+            <IconButton
+              size="large"
+              onClick={() => changeThemeMode(theme.palette.mode)}
+              color="inherit"
+            >
+              {theme.palette.mode === 'light'
+                ? <DarkModeOutlined htmlColor={TEXT_COLOR} />
+                : <LightModeOutlined htmlColor={TEXT_COLOR} />}
+            </IconButton>
           </Box>
         </Toolbar>
       </Container>

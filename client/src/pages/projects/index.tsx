@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { FilterDrawer } from "../../components/filterDrawer";
 import { SyntheticEvent, useCallback, useState } from "react";
-import { IFilterSections, IFilterSection, FilterSectionTypeEnum, IFilterSectionSelect } from "../../components/filterDrawer/types";
+import { FilterSectionTypeEnum, IFilterSectionSelect } from "../../components/filterDrawer/types";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { SpecialComponents } from "react-markdown/lib/ast-to-react";
 import { NormalComponents } from "react-markdown/lib/complex-types";
@@ -17,47 +17,23 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LinkIcon from '@mui/icons-material/Link';
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import DownloadIcon from "@mui/icons-material/Download";
+import {
+  LinkTypeEnum,
+  ButtonTypeEnum,
+  ILink,
+  IProject,
+  IProjectFilters
+} from "./types";
 
 const reactMarkdownComponents: Partial<Omit<NormalComponents, keyof SpecialComponents> & SpecialComponents> | undefined = {
   // Add some padding before list bullets
   li: ({node, ordered, ...props}) => <li style={{marginLeft: "15px"}} {...props} />
 }
 
-const enum LinkTypeEnum {
-  DOWNLOAD = "download",
-  LINK = "link",
-}
-
-const enum ButtonTypeEnum {
-  PRIMARY = "primary",
-  SECONDARY = "secondary",
-}
-
-interface ILink {
-  buttonText: string,
-  url: string,
-  linkType: keyof typeof LinkTypeIconMap,
-  buttonType: ButtonTypeEnum
-}
-
-// TODO: Consider an interface for some kind of IFilterable that would allow the filter sections to be constructed dynamically
-// Ideally something that would also allow ordering the sections and options by their commonality in the data
-interface IProject {
-  id: number,
-  name: string,
-  description: string,
-  technologies: string[],
-  links?: ILink[],
-}
-
 const LinkTypeIconMap = {
   [LinkTypeEnum.DOWNLOAD]: <DownloadIcon />,
   [LinkTypeEnum.LINK]: <OpenInNewIcon />,
 };
-
-interface IProjectFilters extends IFilterSections {
-  Technologies: IFilterSection
-}
 
 const placeholderProjects: IProject[] = [
   {

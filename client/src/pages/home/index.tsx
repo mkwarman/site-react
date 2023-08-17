@@ -1,9 +1,26 @@
-import { Avatar, Box, Card, CardContent, Container, Divider, Grid, Link, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  Link,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+  useTheme
+} from "@mui/material";
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { LinkEnum } from "../../constants";
 
 export const Home = () => {
+  const theme = useTheme();
+  
   return (
     <Box display={"flex"} justifyContent={"center"} marginTop={2}>
       <Grid
@@ -43,7 +60,7 @@ export const Home = () => {
                 <ListItem disablePadding>
                   <ListItemButton component="a" href={LinkEnum.GitHubProfile} target="new">
                     <ListItemIcon>
-                      <GitHubIcon htmlColor="#000000" />
+                      <GitHubIcon htmlColor={theme.palette.text.primary} />
                     </ListItemIcon>
                     <ListItemText primary="GitHub" />
                   </ListItemButton>
