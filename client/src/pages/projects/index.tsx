@@ -3,7 +3,8 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
-  Card, CardContent, Grid, Typography
+  Fade, Grid, Slide, Typography, Zoom,
+  useTheme,
 } from "@mui/material";
 import { FilterDrawer } from "../../components/filterDrawer";
 import { SyntheticEvent, useCallback, useState } from "react";
@@ -113,29 +114,33 @@ const getInitialFilterSections = (projects: IProject[]): IProjectFilters => {
  * - Add skeleton
  */
 export const Projects = () => {
-  const [allProjects] = useState(placeholderProjects);
+  const theme = useTheme();
   const [expanded, setExpanded] = useState(0);
-  const [projects, setProjects] = useState<IProject[]>(allProjects);
+  const [projects] = useState<IProject[]>(placeholderProjects);
   const [filters, setFilters] = useState(getInitialFilterSections(projects))
+  const [shown, setShown] = useState(new Set(projects.map(p => p.id)))
 
   const onFilterChange = useCallback((newFilters: IProjectFilters) => {
     const selectedTechnologies = Object.values(newFilters.Technologies.options)
       .filter(option => option.isChecked).map(option => option.label);
 
-    const newProjects = selectedTechnologies.length > 0
-      ? allProjects.filter(project => project.technologies.some(tech => selectedTechnologies.includes(tech)))
-      : allProjects;
+    const newShown = new Set(selectedTechnologies.length > 0
+      ? projects.filter(project => project.technologies.some(tech => selectedTechnologies.includes(tech))).map(p => p.id)
+      : projects.map(p => p.id));
 
     setFilters(newFilters);
-    setProjects(newProjects);
+    setShown(newShown);
 
-    if (newProjects.length === 1) {
-      setExpanded(newProjects[0].id);
+    if (newShown.size === 1) {
+      setExpanded(newShown.values().next().value);
     }
-  }, [setFilters, setProjects, allProjects]);
+  }, [setFilters, setShown, projects]);
 
   const handleChange = (index: number) => (_: SyntheticEvent, isExpanded: boolean) =>
     setExpanded(isExpanded ? index : -1);
+
+  const isFiltered = useCallback((project: IProject) => (shown.has(project.id)), [shown]);
+  const isExpanded = useCallback((project: IProject) => (expanded === project.id), [expanded])
 
   return (
     <Box sx={{ display: 'flex' }} maxWidth={"lg"} mx={"auto"}>
@@ -146,7 +151,12 @@ export const Projects = () => {
       </Box>
       <Box>
         {projects.map((project) =>
-          <Accordion expanded={project.id === expanded} onChange={handleChange(project.id)} key={project.id}>
+          <Accordion
+            sx={{opacity: isFiltered(project) ? "100%" : "50%"}}
+            expanded={isExpanded(project)}
+            onChange={handleChange(project.id)}
+            key={project.id}
+          >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls={`${project.name}-content`}
