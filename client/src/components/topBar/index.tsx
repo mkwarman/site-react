@@ -33,12 +33,12 @@ const pages: IPage[] = [
     location: "/projects/",
   },
   {
-    properName: "Resume",
-    location: "/resume/",
-  },
-  {
     properName: "Experience",
     location: "/experience/",
+  },
+  {
+    properName: "Resume",
+    location: "/resume/",
   },
 ];
 
