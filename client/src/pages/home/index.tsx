@@ -5,7 +5,7 @@ import { LinkEnum } from "../../constants";
 
 export const Home = () => {
   return (
-    <Box display={"flex"} justifyContent={"center"}>
+    <Box display={"flex"} justifyContent={"center"} marginTop={2}>
       <Grid
         container
         justifyContent={"center"}

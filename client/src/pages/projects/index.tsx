@@ -1,16 +1,44 @@
 import {
   Accordion,
+  AccordionActions,
   AccordionDetails,
   AccordionSummary,
   Box,
-  Fade, Grid, Slide, Typography, Zoom,
-  useTheme,
+  Button,
+  Typography,
 } from "@mui/material";
 import { FilterDrawer } from "../../components/filterDrawer";
 import { SyntheticEvent, useCallback, useState } from "react";
 import { IFilterSections, IFilterSection, FilterSectionTypeEnum, IFilterSectionSelect } from "../../components/filterDrawer/types";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import { SpecialComponents } from "react-markdown/lib/ast-to-react";
+import { NormalComponents } from "react-markdown/lib/complex-types";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import LinkIcon from '@mui/icons-material/Link';
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import DownloadIcon from "@mui/icons-material/Download";
+
+const reactMarkdownComponents: Partial<Omit<NormalComponents, keyof SpecialComponents> & SpecialComponents> | undefined = {
+  // Add some padding before list bullets
+  li: ({node, ordered, ...props}) => <li style={{marginLeft: "15px"}} {...props} />
+}
+
+const enum LinkTypeEnum {
+  DOWNLOAD = "download",
+  LINK = "link",
+}
+
+const enum ButtonTypeEnum {
+  PRIMARY = "primary",
+  SECONDARY = "secondary",
+}
+
+interface ILink {
+  buttonText: string,
+  url: string,
+  linkType: keyof typeof LinkTypeIconMap,
+  buttonType: ButtonTypeEnum
+}
 
 // TODO: Consider an interface for some kind of IFilterable that would allow the filter sections to be constructed dynamically
 // Ideally something that would also allow ordering the sections and options by their commonality in the data
@@ -19,8 +47,13 @@ interface IProject {
   name: string,
   description: string,
   technologies: string[],
-  link?: string,
+  links?: ILink[],
 }
+
+const LinkTypeIconMap = {
+  [LinkTypeEnum.DOWNLOAD]: <DownloadIcon />,
+  [LinkTypeEnum.LINK]: <OpenInNewIcon />,
+};
 
 interface IProjectFilters extends IFilterSections {
   Technologies: IFilterSection
@@ -28,11 +61,32 @@ interface IProjectFilters extends IFilterSections {
 
 const placeholderProjects: IProject[] = [
   {
+    id: 0,
+    name: "This Website",
+    description: "This website is built using React with Typescript. It is hosted on a DigitalOcean droplet running in a docker container behind an Nginx reverse proxy. The site has fully automated continuous integration using Jenkins running in an LXC hosted on my home server. Whenever a new update is merged into the main branch, Jenkins pulls the latest code, spins up a docker container to build the app, pushes a new docker image, then notifies the DigitalOcean droplet to pull and run the latest image.",
+    technologies: ["React", "TypeScript", "Docker", "Software Architecture"],
+    links: [
+      {
+        buttonText: "View Source",
+        linkType: LinkTypeEnum.LINK,
+        buttonType: ButtonTypeEnum.PRIMARY,
+        url: "https://github.com/mkwarman/site-react"
+      },
+    ],
+  },
+  {
     id: 1,
     name: "Accrual Policies",
     description: "I lead the design and development of the Accrual Policies feature suite at Zeal. The project involved automatically calculating accrued time based on worked hours for various policies according to their definition. For example, a customer can create a policy indicating that for every 80 hours worked, an employee should earn 8 hours of PTO. Rich policy customization supports defining initial balances, waiting periods, yearly caps, accrual caps, and more. I built this project using Typescript, Node, Express, and MongoDB. The project directly contributed to new customer relationships at Zeal.",
-    technologies: ["TypeScript", "Node", "MongoDB", "Express", "Software Architecture"],
-    link: "https://docs.zeal.com/docs/pto-and-sick-leave-accruals",
+    technologies: ["TypeScript", "Node", "MongoDB", "Express", "Docker", "Software Architecture"],
+    links: [
+      {
+        buttonText: "View Project",
+        linkType: LinkTypeEnum.LINK,
+        buttonType: ButtonTypeEnum.PRIMARY,
+        url: "https://docs.zeal.com/docs/pto-and-sick-leave-accruals"
+      },
+    ],
   },
   {
     id: 2,
@@ -60,10 +114,23 @@ const placeholderProjects: IProject[] = [
   },
   {
     id: 5,
-    name: "Comparison of Active and Passive Attention Based Tasks Using EEG Waves with Convolutional Neural Network",
-    description: "For my capstone project at KSU, I built a TensorFlow 3D convolutional neural network for comparing passive verses active task brain activity of 24-sensor electroencephalogram (EEG) wave data collected from subjects when they were tired verses well rested. I first trained the neural network using data collected during known activity and energy states, and then tested the neural network's ability to guess whether subjects were performing active or passive tests when tired verses well rested from test data. I also ran the tests using different prefilter options and programmatic pre-transformations such as 5-band Fourier (mapping to the 5 brain wave bands), and Wigner-Ville distribution. The results of the tests indicated that the neural network was noticeably better at classifying energy state between passive tasks verses active tasks.",
+    name: "EEG Analysis using Convolutional Neural Networks",
+    description: "For my capstone project at Kennesaw State University, I built a TensorFlow 3D convolutional neural network for comparing passive verses active task brain activity of 24-sensor electroencephalogram (EEG) wave data collected from subjects when they were tired verses well rested. I first trained the neural network using data collected during known activity and energy states, and then tested the neural network's ability to guess whether subjects were performing active or passive tests when tired verses well rested from test data. I also ran the tests using different prefilter options and programmatic pre-transformations such as 5-band Fourier (mapping to the 5 brain wave bands), and Wigner-Ville distribution. The results of the tests indicated that the neural network was noticeably better at classifying energy state between passive tasks verses active tasks.",
     technologies: ["Python", "TensorFlow", "Machine Learning"],
-    link: "https://github.com/mkwarman/Active-Passive-Attention-3DCNN-Classification",
+    links: [
+      {
+        buttonText: "View Source",
+        linkType: LinkTypeEnum.LINK,
+        buttonType: ButtonTypeEnum.PRIMARY,
+        url: "https://github.com/mkwarman/Active-Passive-Attention-3DCNN-Classification",
+      },
+      {
+        buttonText: "Download Research Paper",
+        linkType: LinkTypeEnum.DOWNLOAD,
+        buttonType: ButtonTypeEnum.SECONDARY,
+        url: "/static/EEGAnalysis.pdf",
+      },
+    ],
   },
   {
     id: 6,
@@ -108,13 +175,25 @@ const getInitialFilterSections = (projects: IProject[]): IProjectFilters => {
   return initialFilterSections;
 }
 
+const getButtonLink = (link: ILink, key: number) => (
+  <Button
+    key={key}
+    endIcon={LinkTypeIconMap[link.linkType]}
+    href={link.url}
+    target="_blank"
+    color={link.buttonType}
+  >
+    {link.buttonText}
+  </Button>
+)
+
+const sortButtons = (a: ILink) => a.buttonType === ButtonTypeEnum.PRIMARY ? 1 : 0
+
 /* TODO:
  * - Load from api
- * - Implement filtering
  * - Add skeleton
  */
 export const Projects = () => {
-  const theme = useTheme();
   const [expanded, setExpanded] = useState(0);
   const [projects] = useState<IProject[]>(placeholderProjects);
   const [filters, setFilters] = useState(getInitialFilterSections(projects))
@@ -163,13 +242,18 @@ export const Projects = () => {
               id={`${project.name}-header`}
             >
               <Box display={"flex"} flexDirection={"column"}>
-                <Typography variant="body1">{project.name}</Typography>
+                <Typography variant="body1">
+                  {project.name} {(!!project.links?.length) && <LinkIcon fontSize="inherit"/>}
+                </Typography>
                 <Typography variant="subtitle2">{project.technologies.join(", ")}</Typography>
               </Box>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography>{project.description}</Typography>
+              <ReactMarkdown components={reactMarkdownComponents}>{project.description}</ReactMarkdown>
             </AccordionDetails>
+            {(!!project.links?.length) && <AccordionActions>
+              {project.links.sort(sortButtons).map((link, i) => getButtonLink(link, i))}
+            </AccordionActions>}
           </Accordion>
         )}
       </Box>
