@@ -42,7 +42,7 @@ export const Home = () => {
             <CardContent>
               <Typography variant="h5">Hi!</Typography>
               <Typography marginTop={1} marginBottom={2} variant="body1">
-                I'm <b>Matt Warman</b>, a Full Stack Software Engineer working at <Link href="https://www.zeal.com" underline="none" target="new">Zeal</Link>.
+                I'm <b>Matt Warman</b>, a Full Stack Software Engineer working at <Link href="https://www.wilqo.com" underline="none" target="new">Wilqo</Link>.
               </Typography>
               <Divider variant="middle"/>
               <Typography marginTop={2} variant="body1">
