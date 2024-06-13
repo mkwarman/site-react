@@ -20,7 +20,7 @@ export interface ILink {
 // TODO: Consider an interface for some kind of IFilterable that would allow the filter sections to be constructed dynamically
 // Ideally something that would also allow ordering the sections and options by their commonality in the data
 export interface IProject {
-  id: number,
+  id: string,
   name: string,
   description: string,
   technologies: string[],

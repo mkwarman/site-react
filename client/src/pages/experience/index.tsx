@@ -28,11 +28,19 @@ interface IExperience {
 const placerholderExperience = [
   {
     title: "Senior Software Engineer",
+    company: "Wilqo",
+    location: "Remote",
+    description: "Developed mortgage LOS solutions on Specialist Team using C# .NET and React with data in MongoDB, Postgres, Redis, and CosmoDB. Utilized modern development practices including CQRS, RESTful design, OOP, IoC, and more. Led multiple projects from initial design to final product knowledge transfer and embedded support within product teams. Facillitated growth within product teams by leading knowledge transfers, providing feedback on pull requests, documenting features and processes, and coaching during peer-programming and one-on-one meetings",
+    startDate: new Date("2023-10-01T00:00:00"),
+    endDate: null,
+  },
+  {
+    title: "Senior Software Engineer",
     company: "Zeal",
     location: "Remote",
     description: "Developed payroll API solutions for customer and internal usage using Node.js with Express and Typescript. Built frontend white label solutions to enable rapid customer success and easy use of Zeal’s payroll solutions using React and internal UI suites. Deployed to AWS using Jenkins and custom pipelines. Designed and developed new feature suites along with product teams to enable customer success and attract new clients.",
     startDate: new Date("2023-01-01T00:00:00"),
-    endDate: null,
+    endDate: new Date("2023-09-30T00:00:00"),
   },
   {
     title: "Senior Software Engineer",
@@ -84,13 +92,13 @@ const getFormattedDate = (date: Date | null, short = false) => {
 const buildSummary = (experience: IExperience, isSmall = false) => {
   const variant = isSmall ? "body2" : "body1";
   return (
-    <Box display={"flex"} width={"100%"} justifyContent={"space-between"} flexDirection={{xs: "column", sm:"row"}}>
-      <Box display={"flex"} flexDirection={{xs: "column", md: "row"}}>
+    <Box display={"flex"} width={"100%"} justifyContent={"space-between"} flexDirection={{ xs: "column", sm: "row" }}>
+      <Box display={"flex"} flexDirection={{ xs: "column", md: "row" }}>
         <Box>
           <InlineTypography fontWeight={"bold"}>{experience.title}</InlineTypography>
         </Box>
         <Box>
-          <Typography display={{xs: 'none', md: 'inline'}} mx={1}>-</Typography>
+          <Typography display={{ xs: 'none', md: 'inline' }} mx={1}>-</Typography>
           <InlineTypography variant={variant}>{experience.company}</InlineTypography>
           <InlineTypography variant={variant} ml={.5}>({experience.location})</InlineTypography>
         </Box>
