@@ -37,10 +37,22 @@ const LinkTypeIconMap = {
 
 const placeholderProjects: IProject[] = [
   {
+    id: "dealmonitor",
+    name: "Deal Monitor",
+    description: "I designed and built a service for monitoring and efficiently handling event-driven updates to a mortgage deal data object. Handlers in the service can expose methods for concurrently reacting to multiple event types and handle those changes while accessing cached external data for efficiency. Changes made by the handlers are then aggregated and applied as a single data event.",
+    technologies: ["C#", "Software Architecture"]
+  },
+  {
+    id: "wilqofrontendmigration",
+    name: "Frontend Contract and Builder Migration",
+    description: "I replaced the legacy builder and backend request contract implementation in Wilqo's frontend project. Previously, the frontend was using react-scripts with an old version of protoc generating request and response models that did not support tree-shaking. I planned and completed the effort to replace react-scripts with Vite, a new tool for protobuf type generation that supported tree-shaking, and an improved deployment pipeline with better developer experience. I completed all work over the course of multiple releases without any downtime or impact to application functionality, culminating in a knowledge transfer session demonstrating new features and an improved developer experience.",
+    technologies: ["React", "Typescript", "Docker", "CI/CD", "Protobuf", "Software Architecture"]
+  },
+  {
     id: "thiswebsite",
     name: "This Website",
     description: "This website is built using React with Typescript. It is hosted on a DigitalOcean droplet running in a docker container behind an Nginx reverse proxy. The site has fully automated continuous integration using Jenkins running in an LXC hosted on my home server. Whenever a new update is merged into the main branch, Jenkins pulls the latest code, spins up a docker container to build the app, pushes a new docker image, then notifies the DigitalOcean droplet to pull and run the latest image.",
-    technologies: ["React", "TypeScript", "Docker", "Software Architecture"],
+    technologies: ["React", "TypeScript", "Docker", "CI/CD", "Software Architecture"],
     links: [
       {
         buttonText: "View Source",
@@ -58,10 +70,9 @@ const placeholderProjects: IProject[] = [
   },
   {
     id: "partiesrestructure",
-    name: "Parties Restructing (In Progress)",
-    description: "I led an inititive to restructure and update parties models within a mortgage deal's structure at Wilqo. The previous implementation worked by accepting unstructured data from multiple locations and loading it into the deal model after passing through a large amount of conditional business logic. The redesigned flow will allow a single endpoint to accept structured data (defined by protobuf models) and a party type identifier. The endpoint will then pass the request to a service that delegates the updates to handlers that self-identify as capable of acting on the event. Upon completion of the process, all changes will be rolled up into a single change event that is persisted to the deal.",
+    name: "Parties Restructing",
+    description: "I led an inititive to restructure and update parties models within a mortgage deal's structure at Wilqo. The previous implementation worked by accepting unstructured data from multiple locations and loading it into the deal model after passing through a large amount of conditional business logic. The redesigned flow allows a single endpoint to accept structured data (defined by protobuf models) and a party type identifier. The endpoint then passes the request to a service that delegates the updates to handlers that self-identify as capable of acting on the event. Upon completion of the process, all changes are rolled up into a single change event that is persisted to the deal.",
     technologies: ["C#", "Protobuf", "Software Architecture"]
-    // TODO: Confirm cosmoDB above
   },
   {
     id: "circuits",
